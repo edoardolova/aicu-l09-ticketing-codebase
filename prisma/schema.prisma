@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Operator {
+  id      String   @id
+  name    String
+  email   String   @unique
+  role    String
+  tickets Ticket[]
+}
+
+model Ticket {
+  id                  String   @id
+  title               String
+  description         String
+  requesterEmail      String
+  customerName        String
+  priority            String
+  area                String?
+  sourceChannel       String?
+  status              String
+  createdByOperatorId String
+  createdByOperator   Operator @relation(fields: [createdByOperatorId], references: [id])
+  createdAt           DateTime
+  updatedAt           DateTime
+
+  // Campi volutamente non ancora gestiti nello starter L09.
+  // `responseDueAt` e' un campo derivato dal server: priority + area -> scadenza SLA.
+  responseDueAt DateTime?
+  urgencyLabel  String?
+}
